@@ -8,8 +8,9 @@ import url from 'js/api.js'
 import {InfiniteScroll} from 'mint-ui'
 Vue.use(InfiniteScroll)
 
-import Foot from 'components/Foot.vue'
 import Swipe from 'components/Swipe.vue'
+import Foot from 'components/Foot.vue'
+
 
 
 let app = new Vue({
