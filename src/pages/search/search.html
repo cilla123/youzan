@@ -20,10 +20,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- <link rel="stylesheet" href="./css/common.css">
   <link rel="stylesheet" href="./css/search.css"> -->
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  
+  </style>
 </head>
 
 <body class=" " style="min-height: 667px;">
-  <div class="container with-top-search" style="min-height: 667px;" @touchmove="move">
+  <div class="container with-top-search" style="min-height: 667px;" @touchmove="move" v-cloak>
     <div class="custom-search js-search-bar">
       <form>
         <input type="search" class="custom-search-input" autocomplete="off" name="keyword" :value="keyword" placeholder="搜索更赞的商品" style="padding-left: 66px;">
