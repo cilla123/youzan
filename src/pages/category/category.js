@@ -1,66 +1,53 @@
-import 'css/common.css'
-import './category.css'
-
-
 import Vue from 'vue'
 import axios from 'axios'
 import url from 'js/api.js'
 
-// import Foot from 'components/Foot.vue'
+import 'css/common.css'
+import './category.css'
+
+import Foot from 'components/Foot.vue'
 import mixin from 'js/mixin.js'
 
-new Vue({
+let app = new Vue({
     el: '#app',
-    data: {
+    data:{
         topLists: null,
         topIndex: 0,
-        subData: null,
+        subLists: null,
         rankData: null
     },
-    created() {
+    created(){
         this.getTopList()
-        this.getSubList(0)
+        this.getRank()
     },
-    methods: {
-        getTopList() {
-            axios.post(url.topList).then(res => {
-                this.topLists = res.data.lists
-            }).catch(res => {
-
+    methods:{
+        getTopList(){
+            axios.post(url.topLists).then((res)=>{
+                this.topLists = res.data[0].lists
             })
         },
-        getSubList(index,id) { 
+
+        getSubList(id,index){
             this.topIndex = index
             if(index === 0){
                 this.getRank()
             }else{
-                axios.post(url.subList,{id}).then(res => {
-                    this.subData = res.data.data
-                }).catch(res => {
-
+                axios.post(url.subLists,{id}).then((res)=>{
+                    this.subLists = res.data[0]
                 })
-            } 
-
+            }
         },
-        getRank() {
-            axios.post(url.rank).then(res => {
-                this.rankData = res.data.data
-                
-            }).catch(res => {
-
+        getRank(){
+            axios.post(url.rank).then((res)=>{
+                this.rankData = res.data[0].data
             })
         },
-        toSearch(list) {
+        toSearch(list){
             location.href = `search.html?keyword=${list.name}&id=${list.id}`
         }
     },
-    // components: {
-    //     Foot
-    // },
-    // filters: {
-    //     number(price) {
-    //         return price + ".00"
-    //     }
-    // }
+    components:{
+        Foot
+    },
     mixins:[mixin]
 })

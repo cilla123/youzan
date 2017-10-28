@@ -22,14 +22,13 @@
   <link rel="stylesheet" href="./css/search.css"> -->
   <style>
     [v-cloak] {
-      display: none;
-    }
-  
+          display: none;
+    }  
   </style>
 </head>
 
 <body class=" " style="min-height: 667px;">
-  <div class="container with-top-search" style="min-height: 667px;" @touchmove="move" v-cloak>
+  <div class="container with-top-search" style="min-height: 667px;" v-cloak>
     <div class="custom-search js-search-bar">
       <form>
         <input type="search" class="custom-search-input" autocomplete="off" name="keyword" :value="keyword" placeholder="搜索更赞的商品" style="padding-left: 66px;">
@@ -58,16 +57,16 @@
     <div class="content">
       <div class="search-wrap js-waterfull-wrap">
         <ul class="js-list">
-          <li class="goods-item" v-for="list in searchList">
+          <li class="goods-item" v-for="list in searchLists">
             <a :href="'goods.html?id='+list.id">
               <div class="thumb">
                 <img :src="list.image">
-                <i class="sell-out"v-if="list.isOut"></i>
+                <i class="sell-out" v-if="list.isOut"></i>
               </div>
               <div class="detail">
                 <div class="title">{{list.name}}</div>
                 <div class="meta relative">
-                  <span class="price">￥{{list.price|currency}}</span>
+                  <span class="price">￥{{list.price|number}}</span>
                   <span class="ship pull-right"v-if="list.isPostage">包邮</span>
                 </div>
               </div>
@@ -77,7 +76,7 @@
         <div class="list-finished">已经没有更多了</div>
       </div>
     </div>
-    <div class="go-to-top" v-show="isShow" @click="toTop()" style=" transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" ></div>
+    <div class="go-to-top" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);"></div>
   </div>
 </body>
 

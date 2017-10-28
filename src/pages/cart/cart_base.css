@@ -275,9 +275,9 @@ dd {
 hr {
   margin: 10px 0;
   border: 0;
-  -webkit-border-image: url("https://b.yzcdn.cn//v2/image/wap/border-line.png") 2 stretch;
-  -moz-border-image: url("https://b.yzcdn.cn//v2/image/wap/border-line.png") 2 stretch;
-  border-image: url("https://b.yzcdn.cn//v2/image/wap/border-line.png") 2 stretch;
+  -webkit-border-image: url("https://b.yzcdn.cn/v2/image/wap/border-line.png") 2 stretch;
+  -moz-border-image: url("https://b.yzcdn.cn/v2/image/wap/border-line.png") 2 stretch;
+  border-image: url("https://b.yzcdn.cn/v2/image/wap/border-line.png") 2 stretch;
   border-top: 2px solid #e5e5e5
 }
 
@@ -480,9 +480,9 @@ only screen and (min-device-pixel-ratio: 1.5) {
 }
 
 .copyright .ft-links ~ .ft-copyright {
-  -webkit-border-image: url("/v2/image/wap/border-line.png") 2 stretch;
-  -moz-border-image: url("/v2/image/wap/border-line.png") 2 stretch;
-  border-image: url("/v2/image/wap/border-line.png") 2 stretch;
+  -webkit-border-image: url("https://b.yzcdn.cn/v2/image/wap/border-line.png") 2 stretch;
+  -moz-border-image: url("https://b.yzcdn.cn/v2/image/wap/border-line.png") 2 stretch;
+  border-image: url("https://b.yzcdn.cn/v2/image/wap/border-line.png") 2 stretch;
   border-top: 2px solid #e5e5e5
 }
 
@@ -1158,7 +1158,4 @@ only screen and (min-device-pixel-ratio: 1.5) {
   #right-icon .show-more-btn {
     background-image: url("/v2/image/wap/right_icon/icons_sprite/icons_sprite@2x_29025c38a6.png")
   }
-}
-.btn-2-1 {
-  width: 48.5%
 }

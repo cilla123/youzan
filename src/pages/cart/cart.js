@@ -1,70 +1,70 @@
-import './cart.css'
-import './cart_base.css'
-import './cart_trade.css'
+ 
+ import './cart_base.css'
+ import './cart_trade.css'
+ import './cart.css'
 
+ import Vue from 'vue'
+ import axios from 'axios'
+ import url from 'js/api.js'
+ import mixin from 'js/mixin.js'
+ import velocity from 'velocity-animate'
+ import Cart from 'js/cartService.js'
 
-import Vue from 'vue'
-import mixin from 'js/mixin.js'
-import axios from 'axios'
-import url from 'js/api.js'
-import Velocity from 'velocity-animate'
-
-new Vue({
-    el: '.container',
-    data: {
-        lists: null,
+ new Vue({
+     el: '.container',
+     data:{
+        cartLists: null,
         total: 0,
-        editingShop: null,
-        editingShopIndex: -1,
-        removePopUp: false,
-        removeData: null ,
+        editingShop: [],
+        editingIndex: -1,
+        removePopup:false,
+        removeDta: null,
         removeMsg: ''
-
-    },
-    computed:{
-        allSelected:{
+        
+     },
+     computed:{
+        selectAll: {
             get(){
-                if(this.lists&&this.lists.length){
-                    return this.lists.every(shop=>{
+                if(this.cartLists&&this.cartLists.length){
+                    return this.cartLists.every(shop=>{
                         return shop.checked
                     })
                 }
                 return false
             },
-            set(newVal) {
-                this.lists.forEach(shop=>{
+            set(newVal){
+                this.cartLists.forEach(shop=>{
                     shop.checked = newVal
                     shop.goodsList.forEach(good=>{
                         good.checked = newVal
-                    })
+                    }) 
                 })
             }
         },
-        allRemoveSelected: {
+        allRemoveSelected:{
             get(){
-                if(this.editingShop){
+                if(!(this.editingIndex===-1)){
                     return this.editingShop.removeChecked
                 }
-                return false
             },
             set(newVal){
-                if(this.editingShop){
-                    this.editingShop.removeChecked= newVal
+                if(!(this.editingIndex===-1)){
+                    this.editingShop.removeChecked = newVal
                     this.editingShop.goodsList.forEach(good=>{
-                        good.removeChecked =newVal
+                        good.removeChecked = newVal
                     })
                 }
             }
         },
-        selectLists(){
-            if(this.lists&&this.lists.length){
+        selectLists() {
+            if(this.cartLists&&this.cartLists.length){
                 let arr = []
                 let total = 0
-                this.lists.forEach(shop=>{
+                this.cartLists.forEach(shop=>{
                     shop.goodsList.forEach(good=>{
                         if(good.checked){
                             arr.push(good)
-                            total += good.price * good.number
+                            total += good.price *good.number
                         }
                     })
                 })
@@ -73,121 +73,120 @@ new Vue({
             }
             return []
         },
-        removeLists() {
-            if(this.editingShop){
-                let arr =[]
+        removeList(){
+            if(!(this.editingIndex ===-1)){
+                let arr = []
                 this.editingShop.goodsList.forEach(good=>{
                     if(good.removeChecked){
                         arr.push(good)
                     }
                 })
-                return arr
+                return arr 
             }
             return []
         }
-    },
-    created() {
-        this.getList()
-    },
-    methods: {
-        getList() {
+
+        
+     },
+     created(){
+        this.getLists()
+     },
+     methods: {
+        getLists(){
             axios.post(url.cartLists).then(res=>{
                 let lists = res.data.cartList
-                lists.forEach(shop =>{
+                lists.forEach(shop=>{
                     shop.checked = true
                     shop.removeChecked = false
                     shop.editing = false
                     shop.editingMsg = '编辑'
                     shop.goodsList.forEach(good=>{
-                        good.checked = true  
-                        good.removeChecked = false                      
+                        good.checked = true
+                        good.removeChecked = false
                     })
                 })
-                this.lists = lists
-                
-        })
+                this.cartLists = lists
+            })
         },
-        selectGood(shop,good) {
-            let attr = this.editingShop ? 'removeChecked' : 'checked'
+        selectGood(shop,good){
+            let attr = this.editingIndex === -1? 'checked':'removeChecked'
             good[attr] = !good[attr]
             shop[attr] = shop.goodsList.every(good=>{
                 return good[attr]
             })
         },
-        selectShop(shop) {
-            let attr = this.editingShop ? 'removeChecked' : 'checked'
-            shop[attr] = !shop[attr]
-            shop.goodsList.forEach(good => {
-                good[attr] = shop[attr]
+        selcetShop(shop){
+            let attr = this.editingIndex === -1? 'checked':'removeChecked'            
+            shop[attr] = !shop[attr] 
+            shop.goodsList.forEach(good=>{
+                 good[attr] = shop[attr]
             })
         },
-        selectAll() {
-            let attr = this.editingShop ? 'allRemoveSelected' : 'allSelected'
+        allSelected() {
+            let attr = this.editingIndex === -1? 'selectAll':'allRemoveSelected' 
             this[attr]= !this[attr]
+
         },
-        edit(shop,shopIndex) {
+        edit(shop,shopIndex,goodIndex){
             shop.editing = !shop.editing
             shop.editingMsg = shop.editing ? '完成':'编辑'
-            this.lists.forEach((item,i) =>{
-                if(shopIndex !== i){
-                    item.editing = false
+            this.cartLists.forEach((item,index)=>{
+                if(shopIndex !==index ){
+                    item.editng = false
                     item.editingMsg = shop.editing ? '':'编辑'
                 }
             })
-            this.editingShop = shop.editing ? shop : null
-            this.editingShopIndex = shop.editing ? shopIndex : -1
+            this.editingShop = shop.editing ? shop :null
+            this.editingIndex = shop.editing ? shopIndex : -1
+            
+            
         },
-        reduce(good) {
-            if(good.number===1) return
-            axios.post(url.cartReduce,{
-                id: good.id,
-                number: 1
-            }).then(res=>{
+        reduce(good){
+            if(good.number ===1) return 
+            Cart.reduce(good.id).then(res=>{
                 good.number--
             })
+
         },
-        add(good) {
-            axios.post(url.addCart,{
-                id: good.id,
-                number: 1
-            }).then(res=>{
+        add(good){
+            Cart.add(good.id).then(res=>{
                 good.number++
             })
         },
-        
         remove(shop,shopIndex,good,goodIndex){
-            this.removePopUp = true
+            this.removePopup = true
             this.removeData = {shop,shopIndex,good,goodIndex}
-            this.removeMsg = '确定要删除该商品吗'
+            this.removeMsg = '确定要删除该商品吗?'
         },
-        removeList(){
-            this.removePopUp = true
-            this.removeMsg = `确定将所选的${this.removeLists.length}个商品删除？`
+        removeLists(){
+            
+            this.removePopup = true
+            this.removeMsg = `确定将所选的${this.removeList.length}个商品删除？`
         },
         removeConfirm(){
-            if(this.removeMsg==='确定要删除该商品吗'){
+            if(this.removeMsg === '确定要删除该商品吗?'){
                 let {shop,shopIndex,good,goodIndex} = this.removeData
-                axios.post(url.cartRemove,{
-                    id: good.id    
-                }).then(res=>{
+                Cart.cartRemove(good.id).then(res=>{
+                    console.log(res);
                     shop.goodsList.splice(goodIndex,1)
+                    this.removePopup = false
                     if(!shop.goodsList.length){
-                        this.lists.splice(shopIndex,1)
-                        this.removeShop()
+                        this.cartLists.splice(shopIndex,1)  
+                        this.removeShop()  
                     }
-                    this.removePopUp = false
+                    
                 })
+                // this.$refs[`goods-${shopIndex}-${goodIndex}`][0].style.left = '0px'
             }else{
-                let ids=[]
-                this.removeLists.forEach(good=>{
-                    ids.push[good.id]
+                let ids =[]
+                this.removeList.forEach(good=>{
+                    ids.push(good.id)
                 })
-                axios.post(url.cartMremove,{
-                    ids
-                }).then(res=>{
+                Cart.cartMremove(ids).then(res=>{
                     let arr = []
+                    this.removePopup = false
                     this.editingShop.goodsList.forEach(good=>{
-                        let index = this.removeLists.findIndex(item=>{
+                        let index = this.removeList.findIndex(item=>{
                             return item.id == good.id
                         })
                         if(index === -1){
@@ -197,19 +196,28 @@ new Vue({
                     if(arr.length){
                         this.editingShop.goodsList = arr
                     }else{
-                        this.lists.splice(this.editingShopIndex,1)
+                        this.cartLists.splice(this.editingIndex,1) 
                         this.removeShop()
                     }
-                    this.removePopUp = false
+                    
                 })
             }
         },
         removeShop(){
             this.editingShop = null
-            this.editingShopIndex = -1
-            this.lists.forEach(shop=>{
+            this.editingIndex = -1
+            this.cartLists.forEach(shop=>{
                 shop.editing = false
                 shop.editingMsg = '编辑'
+            })
+        },
+        updata(good,e){
+            if(good.number<1||(/[^\d]/g.test(good.number))){
+                good.number = 1
+            }
+            Cart.updata(good.id,good.number).then(res=>{
+                console.log(res.statusText);
+                
             })
         },
         start(e,good){
@@ -217,16 +225,18 @@ new Vue({
         },
         end(e,shopIndex,good,goodIndex){
             let endX = e.changedTouches[0].clientX
-            let left = `0`
-            if(good.startX-endX > 100){
-                left = '-60px'
+            let left = '0'
+            if(this.editingIndex===-1){
+                if(good.startX -endX>100){
+                    left = '-60px'
+                }
+                if(endX - good.startX>100){
+                    left = '0px'
+                }
+                velocity(this.$refs[`goods-${shopIndex}-${goodIndex}`],{left})
             }
-            if(endX-good.startX > 100){
-                left = '0px'
-            }
-            Velocity(this.$refs[`goods-${shopIndex}-${goodIndex}`],{left})
-        }
             
-    },
-    mixins: [mixin]
-})
+        }
+     },
+     mixins: [mixin]
+ })

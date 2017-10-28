@@ -694,7 +694,7 @@ html {
 .with-bottom-nav,
 .with-bottom-nav .class-nav {
   padding-top: 45px;
-  padding-bottom: 50px;
+  padding-bottom: 50px
 }
 
 .with-bottom-nav .class-nav {
@@ -758,7 +758,7 @@ html {
   top: 0;
   left: 0;
   background-color: #f4f4f4;
-  z-index: 7
+  z-index: 999
 }
 
 .class-category,
@@ -774,7 +774,8 @@ html {
 }
 
 .inner-content {
-  width: 100%
+  width: 100%;
+  margin-bottom: 50px;
 }
 
 .inner-content,
@@ -1075,8 +1076,7 @@ only screen and (min-device-pixel-ratio:1.5) {
 }
 
 .keywords-list {
-  padding-bottom: 20px;
-  margin-bottom: 50px;
+  padding-bottom: 20px
 }
 
 .keywords-list li {

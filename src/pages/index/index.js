@@ -1,65 +1,61 @@
+import Vue from 'vue'
+import axios from 'axios'
+import { InfiniteScroll } from 'mint-ui' 
+import url from 'js/api.js'
+
 import 'css/common.css'
 import './index.css'
 
-import Vue from 'vue'
-import axios from 'axios'
-import url from 'js/api.js'
+import Foot from 'components/Foot.vue'
+import Swipe from 'components/Swiper.vue'
 
-import {InfiniteScroll} from 'mint-ui'
 Vue.use(InfiniteScroll)
 
-import Swipe from 'components/Swipe.vue'
-// import Foot from 'components/Foot.vue'
-import mixin from 'js/mixin.js'
-
-
-
 let app = new Vue({
-    el: "#app",
+    el: '#app',
     data: {
         lists: null,
+        bannerLists: null,
         pageNum: 1,
         pageSize: 6,
         loading: false,
-        allLoaded: false,
-        bannerLists: null
+        allLoaded: false
     },
     created(){
         this.getLists()
         this.getBanner()
     },
     methods: {
-        getLists(){
-            if(this.allLoaded) return
-            //防止多次触发
+       getLists(){
+           if(this.allLoaded) return
             this.loading = true
-            axios.post(url.hotLists, {
+            axios.post(url.hotLists,{
                 pageNum: this.pageNum,
                 pageSize: this.pageSize
-            }).then(res => {
+            }).then((res)=>{
+                console.log(res);
                 let curLists = res.data.lists
-                //判断所有数据是否加载完毕
-                if(curLists.length < this.pageSize){
+                if(this.pageSize > curLists.length){
                     this.allLoaded = true
                 }
                 if(this.lists){
                     this.lists = this.lists.concat(curLists)
-                }else {
+                }else{
                     this.lists = curLists
                 }
-                this.pageNum++
                 this.loading = false
+                this.pageNum++
             })
         },
         getBanner(){
-            axios.get(url.banner).then(res => {
+            axios.get(url.banner).then((res)=>{
+                console.log(res);
                 this.bannerLists = res.data.lists
             })
         }
     },
     components: {
-        // Foot,
+        Foot,
         Swipe
-    },
-    mixins: [mixin]
+    }
 })
