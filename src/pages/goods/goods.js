@@ -39,7 +39,6 @@ new Vue({
     methods:{
         getDetails(){
             axios.post(url.details,{id}).then(res=>{
-                console.log(res)
                 this.details = res.data.data
                 this.bannerLists = []
                 this.details.imgs.forEach((item)=>{
@@ -71,18 +70,17 @@ new Vue({
             this.skuNum += num    
         },
         addCart(){
-            axios.post(url.addCart,{
+            axios.post(url.cartAdd,{
                 id,
                 number: this.skuNum
             }).then(res=>{
-                if(res.data.status === 200){
                     this.showSku = false
                     this.isAddCart = true
                     this.showMessage = true
                     setTimeout(()=>{
                         this.showMessage = false
                     },1000)
-                }
+                
             })
         }
             
